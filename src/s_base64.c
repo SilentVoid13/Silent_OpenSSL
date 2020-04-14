@@ -3,8 +3,8 @@
 // Copyright (c) 2020 SilentVoid. All rights reserved.
 //
 
-#include "base64.h"
-#include "openssl.h"
+#include "s_base64.h"
+#include "s_openssl.h"
 
 /**
  * Get the base64 plaintext len with a base64 string

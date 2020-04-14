@@ -19,7 +19,7 @@ include_directories(src/utilities/Silent_Log)
 
 ### Sources ###
 
-set(SOURCES src/aes.c src/pbkdf.c src/base64.c src/aead.c)
+set(SOURCES src/s_aes.c src/s_pbkdf.c src/s_base64.c src/s_aead.c)
 
 add_library(Silent_OpenSSL STATIC ${SOURCES})
 

@@ -3,8 +3,8 @@
 // Copyright (c) 2020 SilentVoid. All rights reserved.
 //
 
-#include "aes.h"
-#include "openssl.h"
+#include "s_aes.h"
+#include "s_openssl.h"
 
 /**
  * AES encryption

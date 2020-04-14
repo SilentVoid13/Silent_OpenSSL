@@ -3,8 +3,8 @@
 // Copyright (c) 2020 SilentVoid. All rights reserved.
 //
 
-#include "pbkdf.h"
-#include "openssl.h"
+#include "s_pbkdf.h"
+#include "s_openssl.h"
 
 /**
  * PBKDF2 key derivation

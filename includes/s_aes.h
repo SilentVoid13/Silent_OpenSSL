@@ -3,8 +3,8 @@
 // Copyright (c) 2020 SilentVoid. All rights reserved.
 //
 
-#ifndef SILENT_OPENSSL_AES_H
-#define SILENT_OPENSSL_AES_H
+#ifndef SILENT_OPENSSL_S_AES_H
+#define SILENT_OPENSSL_S_AES_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,4 +15,4 @@
 int aes_encrypt(char *aes_mode, unsigned char *plaintext, size_t plaintext_len, unsigned char *key, unsigned char *iv, unsigned char **ciphertext);
 int aes_decrypt(char *aes_mode, unsigned char *ciphertext, size_t ciphertext_len, unsigned char *key, unsigned char *iv, unsigned char **plaintext);
 
-#endif //SILENT_OPENSSL_AES_H
+#endif //SILENT_OPENSSL_S_AES_H
