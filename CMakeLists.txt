@@ -11,7 +11,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wextra")
 
-project(Silent_Crypt)
+project(Silent_OpenSSL)
 
 ### Includes ###
 include_directories(includes includes/tests)
@@ -24,20 +24,20 @@ set(SOURCES src/aes.c src/pbkdf.c src/base64.c src/aead.c)
 set(UTILITIES_SOURCES src/utilities/Silent_Log/log.c)
 set(SOURCES ${SOURCES} ${UTILITIES_SOURCES})
 
-add_library(Silent_Crypt STATIC ${SOURCES})
+add_library(Silent_OpenSSL STATIC ${SOURCES})
 
 ### Tests ###
 
 set(TEST_SOURCES src/tests/test_all.c src/tests/test_aes.c src/tests/test_base64.c src/tests/test_pbkdf.c src/tests/test_aead.c)
 
-add_executable(Test_Silent_Crypt ${TEST_SOURCES})
-install(TARGETS Test_Silent_Crypt DESTINATION bin)
+add_executable(Test_Silent_OpenSSL ${TEST_SOURCES})
+install(TARGETS Test_Silent_OpenSSL DESTINATION bin)
 
-target_link_libraries(Test_Silent_Crypt Silent_Crypt)
+target_link_libraries(Test_Silent_OpenSSL Silent_OpenSSL)
 
 ### OpenSSL ###
 find_package(OpenSSL REQUIRED)
 
 include_directories(${OPENSSL_INCLUDE_DIRS})
-target_link_libraries(Test_Silent_Crypt ${OPENSSL_LIBRARIES})
+target_link_libraries(Test_Silent_OpenSSL ${OPENSSL_LIBRARIES})
 

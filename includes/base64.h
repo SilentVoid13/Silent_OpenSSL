@@ -3,8 +3,8 @@
 // Copyright (c) 2020 SilentVoid. All rights reserved.
 //
 
-#ifndef SILENT_CRYPT_BASE64_H
-#define SILENT_CRYPT_BASE64_H
+#ifndef SILENT_OPENSSL_BASE64_H
+#define SILENT_OPENSSL_BASE64_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,4 +14,4 @@ size_t calc_base64_length(const unsigned char *b64input);
 int base64_encode(const unsigned char *plaintext, size_t plaintext_len, unsigned char **ciphertext);
 int base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsigned char **plaintext);
 
-#endif //SILENT_CRYPT_BASE64_H
+#endif //SILENT_OPENSSL_BASE64_H

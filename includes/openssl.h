@@ -3,8 +3,8 @@
 // Copyright (c) 2020 SilentVoid. All rights reserved.
 //
 
-#ifndef SILENT_CRYPT_OPENSSL_H
-#define SILENT_CRYPT_OPENSSL_H
+#ifndef SILENT_OPENSSL_OPENSSL_H
+#define SILENT_OPENSSL_OPENSSL_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,4 +14,4 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 
-#endif //SILENT_CRYPT_OPENSSL_H
+#endif //SILENT_OPENSSL_OPENSSL_H
