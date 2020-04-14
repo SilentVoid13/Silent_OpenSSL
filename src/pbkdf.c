@@ -6,8 +6,6 @@
 #include "pbkdf.h"
 #include "openssl.h"
 
-#include "log.h"
-
 /**
  * PBKDF2 key derivation
  *
@@ -25,12 +23,12 @@ int pbkdf2_hmac_derive(const char *password, size_t password_len, const unsigned
         evp_digest = EVP_sha512();
     }
     else {
-        log_error("Unknown digest mode");
+        fprintf(stderr, "Unknown digest mode\n");
         return -1;
     }
 
     if(PKCS5_PBKDF2_HMAC(password, password_len, salt, salt_len, iterations, evp_digest, output_key_len, output_key) == 0) {
-        log_error("PKCS5_PBKDF2_HMAC() failure");
+        fprintf(stderr, "PKCS5_PBKDF2_HMAC() failure\n");
         return -1;
     }
 

@@ -6,8 +6,6 @@
 #include "aes.h"
 #include "openssl.h"
 
-#include "log.h"
-
 /**
  * AES encryption
  *
@@ -28,7 +26,7 @@ int aes_encrypt(char *aes_mode, unsigned char *plaintext, size_t plaintext_len, 
     } else if (strcmp(aes_mode, "aes_256_ctr") == 0) {
         evp_aes = EVP_aes_256_ctr();
     } else {
-        log_error("Unknown AES mode");
+        fprintf(stderr, "Unknown AES mode\n");
         return -1;
     }
 
@@ -39,7 +37,7 @@ int aes_encrypt(char *aes_mode, unsigned char *plaintext, size_t plaintext_len, 
     *ciphertext= malloc(ciphertext_len + 1);
     if(*ciphertext == NULL) {
         free(*ciphertext);
-        log_error("malloc() failure");
+        fprintf(stderr, "malloc() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -47,14 +45,14 @@ int aes_encrypt(char *aes_mode, unsigned char *plaintext, size_t plaintext_len, 
 
     if (!(ctx = EVP_CIPHER_CTX_new())) {
         free(*ciphertext);
-        log_error("EVP_CIPHER_CTX_new() failure");
+        fprintf(stderr, "EVP_CIPHER_CTX_new() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
 
     if (1 != EVP_EncryptInit_ex(ctx, evp_aes, NULL, key, iv)) {
         free(*ciphertext);
-        log_error("EVP_EncryptInit_ex() failure");
+        fprintf(stderr, "EVP_EncryptInit_ex() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -64,7 +62,7 @@ int aes_encrypt(char *aes_mode, unsigned char *plaintext, size_t plaintext_len, 
 
     if (1 != EVP_EncryptUpdate(ctx, *ciphertext, &len, plaintext, plaintext_len)) {
         free(*ciphertext);
-        log_error("EVP_EncryptUpdate() failure");
+        fprintf(stderr, "EVP_EncryptUpdate() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -72,7 +70,7 @@ int aes_encrypt(char *aes_mode, unsigned char *plaintext, size_t plaintext_len, 
 
     if (1 != EVP_EncryptFinal_ex(ctx, (*ciphertext) + len, &len)) {
         free(*ciphertext);
-        log_error("EVP_EncryptFinal_ex() failure");
+        fprintf(stderr, "EVP_EncryptFinal_ex() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -109,7 +107,7 @@ int aes_decrypt(char *aes_mode, unsigned char *ciphertext, size_t ciphertext_len
         evp_aes = EVP_aes_256_ctr();
     }
     else {
-        log_error("Unknown AES mode");
+        fprintf(stderr, "Unknown AES mode\n");
         return -1;
     }
 
@@ -123,7 +121,7 @@ int aes_decrypt(char *aes_mode, unsigned char *ciphertext, size_t ciphertext_len
     *plaintext = malloc(ciphertext_len + 1);
     if(*plaintext == NULL) {
         free(*plaintext);
-        log_error("malloc() failure");
+        fprintf(stderr, "malloc() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -131,14 +129,14 @@ int aes_decrypt(char *aes_mode, unsigned char *ciphertext, size_t ciphertext_len
 
     if(!(ctx = EVP_CIPHER_CTX_new())) {
         free(*plaintext);
-        log_error("EVP_CIPHER_CTX_new() failure");
+        fprintf(stderr, "EVP_CIPHER_CTX_new() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
 
     if(1 != EVP_DecryptInit_ex(ctx, evp_aes, NULL, key, iv)) {
         free(*plaintext);
-        log_error("EVP_DecryptInit_ex() failure");
+        fprintf(stderr, "EVP_DecryptInit_ex() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -148,7 +146,7 @@ int aes_decrypt(char *aes_mode, unsigned char *ciphertext, size_t ciphertext_len
 
     if(1 != EVP_DecryptUpdate(ctx, *plaintext, &len, ciphertext, ciphertext_len)) {
         free(*plaintext);
-        log_error("EVP_DecryptUpdate() failure");
+        fprintf(stderr, "EVP_DecryptUpdate() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -156,7 +154,7 @@ int aes_decrypt(char *aes_mode, unsigned char *ciphertext, size_t ciphertext_len
 
     if(1 != EVP_DecryptFinal_ex(ctx, (*plaintext)+len, &len)) {
         free(*plaintext);
-        log_error("EVP_DecryptFinal_ex() failure");
+        fprintf(stderr, "EVP_DecryptFinal_ex() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }

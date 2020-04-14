@@ -6,8 +6,6 @@
 #include "aead.h"
 #include "openssl.h"
 
-#include "log.h"
-
 /**
  * AEAD encryption
  *
@@ -22,20 +20,20 @@ int aead_aes_256_gcm_encrypt(unsigned char *plaintext, size_t plaintext_len, uns
     *ciphertext = malloc(ciphertext_len);
     if(*plaintext == 0) {
         free(*ciphertext);
-        log_error("malloc() failure");
+        fprintf(stderr, "malloc() failure\n");
         return -1;
     }
 
     if(!(ctx = EVP_CIPHER_CTX_new())) {
         free(*ciphertext);
-        log_error("EVP_CIPHER_CTX_new() failure");
+        fprintf(stderr, "EVP_CIPHER_CTX_new() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
 
     if(!EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
         free(*ciphertext);
-        log_error("EVP_EncryptInit_ex() failure");
+        fprintf(stderr, "EVP_EncryptInit_ex() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -43,14 +41,14 @@ int aead_aes_256_gcm_encrypt(unsigned char *plaintext, size_t plaintext_len, uns
     // Not useful if iv_len = 12
     if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, iv_len, NULL)) {
         free(*ciphertext);
-        log_error("EVP_CIPHER_CTX_ctrl() failure");
+        fprintf(stderr, "EVP_CIPHER_CTX_ctrl() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
 
     if(!EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv)) {
         free(*ciphertext);
-        log_error("EVP_EncryptInit_ex() failure");
+        fprintf(stderr, "EVP_EncryptInit_ex() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -59,7 +57,7 @@ int aead_aes_256_gcm_encrypt(unsigned char *plaintext, size_t plaintext_len, uns
         // Provide any AAD data
         if (!EVP_EncryptUpdate(ctx, NULL, &len, aad, aad_len)) {
             free(*ciphertext);
-            log_error("EVP_EncryptUpdate() failure");
+            fprintf(stderr, "EVP_EncryptUpdate() failure\n");
             ERR_print_errors_fp(stderr);
             return -1;
         }
@@ -67,7 +65,7 @@ int aead_aes_256_gcm_encrypt(unsigned char *plaintext, size_t plaintext_len, uns
 
     if(!EVP_EncryptUpdate(ctx, *ciphertext, &len, plaintext, plaintext_len)) {
         free(*ciphertext);
-        log_error("EVP_EncryptUpdate() failure");
+        fprintf(stderr, "EVP_EncryptUpdate() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -75,7 +73,7 @@ int aead_aes_256_gcm_encrypt(unsigned char *plaintext, size_t plaintext_len, uns
 
     if(1 > EVP_EncryptFinal_ex(ctx, (*ciphertext)+len, &len)) {
         free(*ciphertext);
-        log_error("EVP_EncryptFinal_ex() failure");
+        fprintf(stderr, "EVP_EncryptFinal_ex() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -83,7 +81,7 @@ int aead_aes_256_gcm_encrypt(unsigned char *plaintext, size_t plaintext_len, uns
     // Get the tag
     if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag)) {
         free(*ciphertext);
-        log_error("EVP_CIPHER_CTX_ctrl() failure");
+        fprintf(stderr, "EVP_CIPHER_CTX_ctrl() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -109,20 +107,20 @@ int aead_aes_256_gcm_decrypt(unsigned char *ciphertext, size_t ciphertext_len, u
     *plaintext = malloc(ciphertext_len);
     if(*plaintext == 0) {
         free(*plaintext);
-        log_error("malloc() failure");
+        fprintf(stderr, "malloc() failure\n");
         return -1;
     }
 
     if(!(ctx = EVP_CIPHER_CTX_new())) {
         free(*plaintext);
-        log_error("EVP_CIPHER_CTX_new() failure");
+        fprintf(stderr, "EVP_CIPHER_CTX_new() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
 
     if(!EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
         free(*plaintext);
-        log_error("EVP_DecryptInit_ex() failure");
+        fprintf(stderr, "EVP_DecryptInit_ex() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -130,14 +128,14 @@ int aead_aes_256_gcm_decrypt(unsigned char *ciphertext, size_t ciphertext_len, u
     // Not useful if iv_len = 12
     if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, iv_len, NULL)) {
         free(*plaintext);
-        log_error("EVP_CIPHER_CTX_ctrl() failure");
+        fprintf(stderr, "EVP_CIPHER_CTX_ctrl() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
 
     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv)) {
         free(*plaintext);
-        log_error("EVP_DecryptInit_ex() failure");
+        fprintf(stderr, "EVP_DecryptInit_ex() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -146,7 +144,7 @@ int aead_aes_256_gcm_decrypt(unsigned char *ciphertext, size_t ciphertext_len, u
         // Provide any AAD data
         if (!EVP_DecryptUpdate(ctx, NULL, &len, aad, aad_len)) {
             free(*plaintext);
-            log_error("EVP_DecryptUpdate() failure");
+            fprintf(stderr, "EVP_DecryptUpdate() failure\n");
             ERR_print_errors_fp(stderr);
             return -1;
         }
@@ -154,7 +152,7 @@ int aead_aes_256_gcm_decrypt(unsigned char *ciphertext, size_t ciphertext_len, u
 
     if(!EVP_DecryptUpdate(ctx, *plaintext, &len, ciphertext, ciphertext_len)) {
         free(*plaintext);
-        log_error("EVP_DecryptUpdate() failure");
+        fprintf(stderr, "EVP_DecryptUpdate() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -163,7 +161,7 @@ int aead_aes_256_gcm_decrypt(unsigned char *ciphertext, size_t ciphertext_len, u
     // Set the expected tag value for authenticated data
     if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
         free(*plaintext);
-        log_error("EVP_CIPHER_CTX_ctrl() failure");
+        fprintf(stderr, "EVP_CIPHER_CTX_ctrl() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -171,7 +169,7 @@ int aead_aes_256_gcm_decrypt(unsigned char *ciphertext, size_t ciphertext_len, u
     // If auth failed or anything else
     if(1 > EVP_DecryptFinal_ex(ctx, (*plaintext)+len, &len)) {
         free(*plaintext);
-        log_error("EVP_DecryptFinal_ex() failure");
+        fprintf(stderr, "EVP_DecryptFinal_ex() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }

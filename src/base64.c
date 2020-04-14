@@ -6,8 +6,6 @@
 #include "base64.h"
 #include "openssl.h"
 
-#include "log.h"
-
 /**
  * Get the base64 plaintext len with a base64 string
  *
@@ -33,7 +31,7 @@ int base64_encode(const unsigned char *plaintext, size_t plaintext_len, unsigned
     *ciphertext = malloc(ciphertext_len + 1);
     if(*ciphertext == NULL) {
         free(*ciphertext);
-        log_error("malloc() failure");
+        fprintf(stderr, "malloc() failure\n");
         return -1;
     }
     (*ciphertext)[ciphertext_len] = '\0';
@@ -41,7 +39,7 @@ int base64_encode(const unsigned char *plaintext, size_t plaintext_len, unsigned
     EVP_ENCODE_CTX *ctx;
     if(!(ctx = EVP_ENCODE_CTX_new())) {
         free(*ciphertext);
-        log_error("EVP_ENCODE_CTX_new() failure");
+        fprintf(stderr, "EVP_ENCODE_CTX_new() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -50,7 +48,7 @@ int base64_encode(const unsigned char *plaintext, size_t plaintext_len, unsigned
 
     if(1 != (EVP_EncodeUpdate(ctx, *ciphertext, &len, plaintext, plaintext_len))) {
         free(*ciphertext);
-        log_error("EVP_EncodeUpdate() failure");
+        fprintf(stderr, "EVP_EncodeUpdate() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -72,7 +70,7 @@ int base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsign
     *plaintext = malloc(plaintext_len + 1);
     if(*plaintext == NULL) {
         free(*plaintext);
-        log_error("malloc() failure");
+        fprintf(stderr, "malloc() failure\n");
         return -1;
     }
     (*plaintext)[plaintext_len] = '\0';
@@ -80,7 +78,7 @@ int base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsign
     EVP_ENCODE_CTX *ctx;
     if(!(ctx = EVP_ENCODE_CTX_new())) {
         free(*plaintext);
-        log_error("EVP_ENCODE_CTX_new() failure");
+        fprintf(stderr, "EVP_ENCODE_CTX_new() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
@@ -89,7 +87,7 @@ int base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsign
 
     if(EVP_DecodeUpdate(ctx, *plaintext, &len, ciphertext, ciphertext_len) == -1) {
         free(*plaintext);
-        log_error("EVP_DecodeUpdate() failure");
+        fprintf(stderr, "EVP_DecodeUpdate() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
