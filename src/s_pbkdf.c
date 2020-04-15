@@ -11,7 +11,7 @@
  *
  * @return plaintext length on success, -1 on failure
  */
-int pbkdf2_hmac_derive(const char *password, size_t password_len, const unsigned char *salt, size_t salt_len, size_t iterations, char *digest_mode, unsigned char *output_key, size_t output_key_len) {
+int s_pbkdf2_hmac_derive(const char *password, size_t password_len, const unsigned char *salt, size_t salt_len, size_t iterations, char *digest_mode, unsigned char *output_key, size_t output_key_len) {
     const EVP_MD *evp_digest;
     if(strcmp(digest_mode, "sha1") == 0) {
         evp_digest = EVP_sha1();

@@ -11,7 +11,7 @@
  *
  * @return ciphertext_len on success, -1 on failure
  */
-int aead_aes_256_gcm_encrypt(unsigned char *plaintext, size_t plaintext_len, unsigned char *aad, size_t aad_len, unsigned char *key, unsigned char *iv, size_t iv_len, unsigned char **ciphertext, unsigned char *tag) {
+int s_aead_aes_256_gcm_encrypt(unsigned char *plaintext, size_t plaintext_len, unsigned char *aad, size_t aad_len, unsigned char *key, unsigned char *iv, size_t iv_len, unsigned char **ciphertext, unsigned char *tag) {
     EVP_CIPHER_CTX *ctx;
     int len;
 
@@ -98,7 +98,7 @@ int aead_aes_256_gcm_encrypt(unsigned char *plaintext, size_t plaintext_len, uns
  *
  * @return plaintext_len on success, -1 on failure
  */
-int aead_aes_256_gcm_decrypt(unsigned char *ciphertext, size_t ciphertext_len, unsigned char *aad, size_t aad_len, unsigned char *key, unsigned char *iv, size_t iv_len, unsigned char **plaintext, unsigned char *tag) {
+int s_aead_aes_256_gcm_decrypt(unsigned char *ciphertext, size_t ciphertext_len, unsigned char *aad, size_t aad_len, unsigned char *key, unsigned char *iv, size_t iv_len, unsigned char **plaintext, unsigned char *tag) {
     EVP_CIPHER_CTX *ctx;
     int len;
     int plaintext_len;

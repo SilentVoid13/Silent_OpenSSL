@@ -11,7 +11,7 @@
  *
  * @return ciphertext length on success, -1 on failure
  */
-int aes_encrypt(char *aes_mode, unsigned char *plaintext, size_t plaintext_len, unsigned char *key, unsigned char *iv, unsigned char **ciphertext) {
+int s_aes_encrypt(char *aes_mode, unsigned char *plaintext, size_t plaintext_len, unsigned char *key, unsigned char *iv, unsigned char **ciphertext) {
     const EVP_CIPHER *evp_aes;
     if (strcmp(aes_mode, "aes_128_ecb") == 0) {
         evp_aes = EVP_aes_128_ecb();
@@ -86,7 +86,7 @@ int aes_encrypt(char *aes_mode, unsigned char *plaintext, size_t plaintext_len, 
  *
  * @return plaintext length on success, -1 on failure
  */
-int aes_decrypt(char *aes_mode, unsigned char *ciphertext, size_t ciphertext_len, unsigned char *key, unsigned char *iv, unsigned char **plaintext) {
+int s_aes_decrypt(char *aes_mode, unsigned char *ciphertext, size_t ciphertext_len, unsigned char *key, unsigned char *iv, unsigned char **plaintext) {
     const EVP_CIPHER *evp_aes;
     if(strcmp(aes_mode, "aes_128_ecb") == 0) {
         evp_aes = EVP_aes_128_ecb();

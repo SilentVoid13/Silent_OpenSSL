@@ -23,7 +23,7 @@ size_t calc_base64_length(const unsigned char *b64input) {
     return (len*3)/4 - padding;
 }
 
-int base64_encode(const unsigned char *plaintext, size_t plaintext_len, unsigned char **ciphertext) {
+int s_base64_encode(const unsigned char *plaintext, size_t plaintext_len, unsigned char **ciphertext) {
     // Max size with padding of 2
     size_t ciphertext_len = 4 * ((plaintext_len+2)/3);
     int len;
@@ -63,7 +63,7 @@ int base64_encode(const unsigned char *plaintext, size_t plaintext_len, unsigned
     return ciphertext_len;
 }
 
-int base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsigned char **plaintext) {
+int s_base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsigned char **plaintext) {
     size_t plaintext_len = calc_base64_length(ciphertext);
     int len;
 
