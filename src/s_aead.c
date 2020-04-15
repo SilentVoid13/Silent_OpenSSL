@@ -17,7 +17,7 @@ int s_aead_aes_256_gcm_encrypt(unsigned char *plaintext, size_t plaintext_len, u
 
     size_t ciphertext_len = (plaintext_len / BLOCKSIZE + 1) * BLOCKSIZE;
     // Cipher length always greater or equal to plaintext
-    *ciphertext = malloc(ciphertext_len);
+    *ciphertext = malloc(ciphertext_len + 2);
     if(*plaintext == 0) {
         free(*ciphertext);
         fprintf(stderr, "malloc() failure\n");
@@ -104,7 +104,7 @@ int s_aead_aes_256_gcm_decrypt(unsigned char *ciphertext, size_t ciphertext_len,
     int plaintext_len;
 
     // Cipher length always greater or equal to plaintext
-    *plaintext = malloc(ciphertext_len);
+    *plaintext = malloc(ciphertext_len + 2);
     if(*plaintext == 0) {
         free(*plaintext);
         fprintf(stderr, "malloc() failure\n");

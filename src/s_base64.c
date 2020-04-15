@@ -25,10 +25,10 @@ size_t calc_base64_length(const unsigned char *b64input) {
 
 int s_base64_encode(const unsigned char *plaintext, size_t plaintext_len, unsigned char **ciphertext) {
     // Max size with padding of 2
-    size_t ciphertext_len = 4 * ((plaintext_len+2)/3) + 1;
+    size_t ciphertext_len = 4 * ((plaintext_len+2)/3);
     int len;
 
-    *ciphertext = malloc(ciphertext_len + 1);
+    *ciphertext = malloc(ciphertext_len + 2);
     if(*ciphertext == NULL) {
         free(*ciphertext);
         fprintf(stderr, "malloc() failure\n");
@@ -67,7 +67,7 @@ int s_base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsi
     size_t plaintext_len = ciphertext_len;
     int len;
 
-    *plaintext = malloc(plaintext_len + 1);
+    *plaintext = malloc(plaintext_len + 2);
     if(*plaintext == NULL) {
         free(*plaintext);
         fprintf(stderr, "malloc() failure\n");

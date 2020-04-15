@@ -34,7 +34,7 @@ int s_aes_encrypt(char *aes_mode, unsigned char *plaintext, size_t plaintext_len
     int len;
 
     size_t ciphertext_len = (plaintext_len / BLOCKSIZE + 1) * BLOCKSIZE;
-    *ciphertext= malloc(ciphertext_len + 1);
+    *ciphertext= malloc(ciphertext_len + 2);
     if(*ciphertext == NULL) {
         free(*ciphertext);
         fprintf(stderr, "malloc() failure\n");
@@ -118,7 +118,7 @@ int s_aes_decrypt(char *aes_mode, unsigned char *ciphertext, size_t ciphertext_l
     int plaintext_len;
 
     // The ciphertext is always greater or equal to the length of the plaintext
-    *plaintext = malloc(ciphertext_len + 1);
+    *plaintext = malloc(ciphertext_len + 2);
     if(*plaintext == NULL) {
         free(*plaintext);
         fprintf(stderr, "malloc() failure\n");
