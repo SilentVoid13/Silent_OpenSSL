@@ -19,13 +19,13 @@ include_directories(src/utilities/Silent_Log)
 
 ### Sources ###
 
-set(SOURCES src/s_aes.c src/s_pbkdf.c src/s_base64.c src/s_aead.c src/s_curve.c)
+set(SOURCES src/s_aes.c src/s_pbkdf.c src/s_base64.c src/s_aead.c src/s_curve.c src/s_digest.c)
 
 add_library(Silent_OpenSSL STATIC ${SOURCES})
 
 ### Tests ###
 
-set(TEST_SOURCES src/tests/test_all.c src/tests/test_aes.c src/tests/test_base64.c src/tests/test_pbkdf.c src/tests/test_aead.c src/tests/test_curve.c)
+set(TEST_SOURCES src/tests/test_all.c src/tests/test_aes.c src/tests/test_base64.c src/tests/test_pbkdf.c src/tests/test_aead.c src/tests/test_curve.c src/tests/test_digest.c)
 
 add_executable(Test_Silent_OpenSSL ${TEST_SOURCES})
 install(TARGETS Test_Silent_OpenSSL DESTINATION bin)

@@ -55,7 +55,7 @@ int s_curve_shared_secret(char *key_algorithm, unsigned char *public_key, size_t
         return -1;
     }
 
-    *shared_secret = malloc(shared_secret_len);
+    *shared_secret = malloc(shared_secret_len+1);
     if(*shared_secret == NULL) {
         fprintf(stderr, "malloc() failure\n");
         return -1;
