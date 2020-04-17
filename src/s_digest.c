@@ -108,11 +108,13 @@ int s_digest_digest(EVP_MD_CTX *mdctx, char *digest_mode, unsigned char **digest
     unsigned int digest_len;
 
     if((*digest = malloc(EVP_MD_size(evp_digest)+1)) == NULL) {
+        EVP_MD_CTX_free(mdctx);
         fprintf(stderr, "malloc() failure\n");
         return -1;
     }
 
     if(1 != EVP_DigestFinal_ex(mdctx, *digest, &digest_len)) {
+        EVP_MD_CTX_free(mdctx);
         fprintf(stderr, "EVP_DigestFinal_ex() failure");
         return -1;
     }

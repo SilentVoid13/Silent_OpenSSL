@@ -12,6 +12,6 @@
 
 size_t calc_base64_length(const unsigned char *b64input);
 int s_base64_encode(const unsigned char *plaintext, size_t plaintext_len, unsigned char **ciphertext);
-int s_base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsigned char **plaintext);
+int s_base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsigned char **plaintext, int padded);
 
 #endif //SILENT_OPENSSL_S_BASE64_H

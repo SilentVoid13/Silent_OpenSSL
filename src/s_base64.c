@@ -63,12 +63,34 @@ int s_base64_encode(const unsigned char *plaintext, size_t plaintext_len, unsign
     return ciphertext_len;
 }
 
-int s_base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsigned char **plaintext) {
-    size_t plaintext_len = ciphertext_len;
+int s_base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsigned char **plaintext, int padded) {
+    unsigned char *ciphertext_padded;
+    size_t ciphertext_padded_len = ciphertext_len;
+    if(!padded) {
+        ciphertext_padded = malloc(ciphertext_padded_len + 5);
+        if(ciphertext_padded == NULL) {
+            fprintf(stderr, "malloc() failure\n");
+            return -1;
+        }
+        memcpy(ciphertext_padded, ciphertext, ciphertext_len);
+
+        size_t padding_size = ciphertext_len + (ciphertext_len % 4);
+        for(int i = ciphertext_len; i < (int)padding_size; i++) {
+            ciphertext_padded[i] = '=';
+            ciphertext_padded_len += 1;
+        }
+    }
+    else {
+        ciphertext_padded = (unsigned char *)ciphertext;
+    }
+
+    size_t plaintext_len = ciphertext_padded_len;
     int len;
 
     *plaintext = malloc(plaintext_len + 2);
     if(*plaintext == NULL) {
+        if(ciphertext_padded != ciphertext)
+            free(ciphertext_padded);
         free(*plaintext);
         fprintf(stderr, "malloc() failure\n");
         return -1;
@@ -77,6 +99,8 @@ int s_base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsi
 
     EVP_ENCODE_CTX *ctx;
     if(!(ctx = EVP_ENCODE_CTX_new())) {
+        if(ciphertext_padded != ciphertext)
+            free(ciphertext_padded);
         free(*plaintext);
         fprintf(stderr, "EVP_ENCODE_CTX_new() failure\n");
         ERR_print_errors_fp(stderr);
@@ -85,15 +109,24 @@ int s_base64_decode(const unsigned char *ciphertext, size_t ciphertext_len, unsi
 
     EVP_DecodeInit(ctx);
 
-    if(EVP_DecodeUpdate(ctx, *plaintext, &len, ciphertext, ciphertext_len) == -1) {
+    if(EVP_DecodeUpdate(ctx, *plaintext, &len, ciphertext_padded, ciphertext_padded_len) == -1) {
+        if(ciphertext_padded != ciphertext)
+            free(ciphertext_padded);
         free(*plaintext);
         fprintf(stderr, "EVP_DecodeUpdate() failure\n");
         ERR_print_errors_fp(stderr);
         return -1;
     }
     plaintext_len = len;
+    if(ciphertext_padded != ciphertext)
+        free(ciphertext_padded);
 
-    EVP_DecodeFinal(ctx, (*plaintext) + len, &len);
+    if(EVP_DecodeFinal(ctx, (*plaintext) + len, &len) == -1) {
+        free(*plaintext);
+        fprintf(stderr, "EVP_DecodeFinal() failure\n");
+        ERR_print_errors_fp(stderr);
+        return -1;
+    }
 
     plaintext_len += len;
     (*plaintext)[plaintext_len] = '\0';
