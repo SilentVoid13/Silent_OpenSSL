@@ -22,7 +22,7 @@ int s_curve_shared_secret(char *key_algorithm, unsigned char *public_key, size_t
 
     EVP_PKEY *evp_public_key = NULL;
     EVP_PKEY *evp_private_key = NULL;
-    EVP_PKEY_CTX *ctx;
+    EVP_PKEY_CTX *ctx = NULL;
     size_t shared_secret_len;
 
     if((evp_public_key = EVP_PKEY_new_raw_public_key(evp_pkey_mode, NULL, public_key, public_key_len)) == NULL) {
@@ -31,41 +31,60 @@ int s_curve_shared_secret(char *key_algorithm, unsigned char *public_key, size_t
     }
 
     if((evp_private_key = EVP_PKEY_new_raw_private_key(evp_pkey_mode, NULL, private_key, private_key_len)) == NULL) {
+        EVP_PKEY_free(evp_public_key);
         fprintf(stderr, "EVP_PKEY_new_raw_private_key() failure\n");
         return -1;
     }
 
     if(!(ctx = EVP_PKEY_CTX_new(evp_private_key, NULL))) {
+        EVP_PKEY_free(evp_public_key);
+        EVP_PKEY_free(evp_private_key);
+        EVP_PKEY_CTX_free(ctx);
         fprintf(stderr, "EVP_PKEY_CTX_new() failure\n");
         return -1;
     }
 
     if (EVP_PKEY_derive_init(ctx) <= 0) {
+        EVP_PKEY_free(evp_public_key);
+        EVP_PKEY_free(evp_private_key);
+        EVP_PKEY_CTX_free(ctx);
         fprintf(stderr, "EVP_PKEY_derive_init() failure\n");
         return -1;
     }
 
     if (EVP_PKEY_derive_set_peer(ctx, evp_public_key) <= 0) {
+        EVP_PKEY_free(evp_public_key);
+        EVP_PKEY_free(evp_private_key);
+        EVP_PKEY_CTX_free(ctx);
         fprintf(stderr, "EVP_PKEY_derive_set_peer() failure\n");
         return -1;
     }
 
     if (EVP_PKEY_derive(ctx, NULL, &shared_secret_len) <= 0) {
+        EVP_PKEY_free(evp_public_key);
+        EVP_PKEY_free(evp_private_key);
+        EVP_PKEY_CTX_free(ctx);
         fprintf(stderr, "EVP_PKEY_derive() failure\n");
         return -1;
     }
 
     *shared_secret = malloc(shared_secret_len+1);
     if(*shared_secret == NULL) {
+        free(*shared_secret);
         fprintf(stderr, "malloc() failure\n");
         return -1;
     }
 
     if (EVP_PKEY_derive(ctx, *shared_secret, &shared_secret_len) <= 0){
+        free(*shared_secret);
+        EVP_PKEY_free(evp_public_key);
+        EVP_PKEY_free(evp_private_key);
+        EVP_PKEY_CTX_free(ctx);
         fprintf(stderr, "EVP_PKEY_derive() failure\n");
         return -1;
     }
-
+    EVP_PKEY_free(evp_public_key);
+    EVP_PKEY_free(evp_private_key);
     EVP_PKEY_CTX_free(ctx);
 
     return shared_secret_len;

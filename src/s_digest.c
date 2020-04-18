@@ -41,11 +41,13 @@ int s_digest(char *digest_mode, unsigned char *data, size_t data_len, unsigned c
     }
 
     if((*digest = malloc(EVP_MD_size(evp_digest)+1)) == NULL) {
+        free(*digest);
         fprintf(stderr, "malloc() failure\n");
         return -1;
     }
 
     if(1 != EVP_DigestFinal_ex(mdctx, *digest, &digest_len)) {
+        free(*digest);
         fprintf(stderr, "EVP_DigestFinal_ex() failure");
         return -1;
     }
@@ -87,7 +89,6 @@ EVP_MD_CTX * s_digest_update(EVP_MD_CTX *mdctx, unsigned char *data, size_t data
     if (1 != EVP_DigestUpdate(mdctx, data, data_len)) {
         fprintf(stderr, "EVP_DigestUpdate() failure");
         return NULL;
-
     }
     return mdctx;
 }
@@ -108,17 +109,18 @@ int s_digest_digest(EVP_MD_CTX *mdctx, char *digest_mode, unsigned char **digest
     unsigned int digest_len;
 
     if((*digest = malloc(EVP_MD_size(evp_digest)+1)) == NULL) {
+        free(*digest);
         EVP_MD_CTX_free(mdctx);
         fprintf(stderr, "malloc() failure\n");
         return -1;
     }
 
     if(1 != EVP_DigestFinal_ex(mdctx, *digest, &digest_len)) {
+        free(*digest);
         EVP_MD_CTX_free(mdctx);
         fprintf(stderr, "EVP_DigestFinal_ex() failure");
         return -1;
     }
-
     EVP_MD_CTX_free(mdctx);
 
     return (int)digest_len;
